@@ -70,7 +70,7 @@ build:
 	@echo "Building..."
 	@docker compose -f docker/docker-compose.yaml build
 
-start:
+start: build
 	@echo "Starting..."
 	@docker compose -f docker/docker-compose.yaml up
 

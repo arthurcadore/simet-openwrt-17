@@ -4,7 +4,7 @@
 /dl
 /feed-toolchain-3006
 /env
-/submodules/toolchain
+/submodules/*
 /output
 /bin
 /build_dir
