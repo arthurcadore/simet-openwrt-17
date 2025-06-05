@@ -42,20 +42,20 @@ env-init:
 		echo "Arquivo env/.git_credentials.env criado com sucesso!"; \
 	'
 
-submodule-install: 
-	@echo "Installing submodules..."
-	@mkdir -p submodules
-	@git submodule add -f -b $(GIT_BRANCH) $(GIT_REPO_URL) submodules/openwrt
-
-submodule-update: 
-	@echo "Updating submodules..."
-	@git submodule update --remote --merge
+submodule-install: toolchain-install openwrt-install
 
 submodule-clean: 
 	@echo "Cleaning submodules..."
-	@sudo rm -rf submodules/openwrt
-	
+	@sudo rm -rf submodules/*
+
+openwrt-install: 
+	@echo "Cloning openwrt..."
+	@mkdir -p submodules
+	@git clone -b $(GIT_BRANCH) $(GIT_REPO_URL) submodules/openwrt
+
 toolchain-install:
+	@echo "Cloning toolchain..."
+	@mkdir -p submodules
 	@if [ ! -f ./env/.git_credentials.env ]; then \
 		echo "Arquivo ./env/.git_credentials.env não encontrado."; \
 		exit 1; \
@@ -80,7 +80,7 @@ stop:
 
 restart: stop start
 
-clean: stop
+clean: stop submodule-clean
 	docker ps -a -q | xargs -r docker stop
 	docker ps -a -q | xargs -r docker rm
 	docker images -q | xargs -r docker rmi -f

@@ -1,4 +1,0 @@
-[submodule "submodules/openwrt"]
-	path = submodules/openwrt
-	url = https://github.com/simetnicbr/openwrt-openwrt.git
-	branch = lede-17.01
