@@ -47,6 +47,14 @@ submodule-install:
 	@mkdir -p submodules
 	@git submodule add -f -b $(GIT_BRANCH) $(GIT_REPO_URL) submodules/openwrt
 
+submodule-update: 
+	@echo "Updating submodules..."
+	@git submodule update --remote --merge
+
+submodule-clean: 
+	@echo "Cleaning submodules..."
+	@sudo rm -rf submodules/openwrt
+	
 toolchain-install:
 	@if [ ! -f ./env/.git_credentials.env ]; then \
 		echo "Arquivo ./env/.git_credentials.env não encontrado."; \
@@ -58,21 +66,19 @@ toolchain-install:
 	echo "GIT_URL=$${GIT_URL}"; \
 	git clone -b main https://$${GIT_USER}:$${GIT_PASS_DECODED}@$${GIT_URL} submodules/toolchain
 
-submodule-update: 
-	@echo "Updating submodules..."
-	@git submodule update --remote --merge
-
-build: toolchain
+build: 
 	@echo "Building..."
-	@docker compose build
+	@docker compose -f docker/docker-compose.yaml build
 
 start:
 	@echo "Starting..."
-	@docker compose up 
+	@docker compose -f docker/docker-compose.yaml up
 
 stop:
 	@echo "Stopping..."
-	@docker compose down
+	@docker compose -f docker/docker-compose.yaml down
+
+restart: stop start
 
 clean: stop
 	docker ps -a -q | xargs -r docker stop

@@ -1,22 +1,29 @@
 services:
-  # OpenWrt builder container
-  openwrtbuilder:
-    image: arthurcadore/openwrt-build:19
+  # OpenWrt Compiler
+  openwrtcompiler:
+    build:
+      context: .
+      dockerfile: Dockerfile 
     volumes: 
-      - ./build/:/host/
-      - ./includes/:/host/includes/
-      - ./custom/:/host/custom/
-      - ./output/:/host/output/
-      - ./docker/entrypoint.sh:/startup.sh
-      - ./config/.config:/host/.config
-      - ./config/feeds.conf:/host/feeds.conf
-      - ./config/feeds.conf.default:/host/feeds.conf.default
-    container_name: openwrtbuilder
+      # - ./build/:/host/
+      # - ./includes/:/host/includes/
+      # - ./custom/:/host/custom/
+      # - ./output/:/host/output/
+      # - ./docker/entrypoint.sh:/startup.sh
+      # - ./config/.config:/host/.config
+      # - ./config/feeds.conf:/host/feeds.conf
+      # - ./config/feeds.conf.default:/host/feeds.conf.default
+
+        - ../docker/entrypoint.sh:/startup.sh
+        - ../submodules/openwrt:/host/
+        - ../config/.config:/host/.config
+        - ../config/feeds.conf:/host/feeds.conf
+    container_name: openwrtcompiler
     working_dir: /host/
     entrypoint: ["/bin/sh", "/startup.sh"]
     env_file:
-      - ./env/.git_credentials
-
+      - ../env/.git_credentials.env
+    
   # http server to serve the output files to be downloaded for testing.
   httpserver:
     image: httpd:alpine3.18
@@ -25,4 +32,4 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - "./output/:/usr/local/apache2/htdocs/"
+      - "./out/:/usr/local/apache2/htdocs/"
