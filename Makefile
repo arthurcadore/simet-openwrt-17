@@ -21,12 +21,14 @@ clean: stop
 	docker volume ls -q | xargs -r docker volume rm
 
 toolchain-install:
-	@echo "Installing toolchain..."
-	@set -a && . ./env/.git_credentials && \
-	echo "GIT_USER=$${GIT_USER}" && \
-	echo "GIT_REPO=$${GIT_REPO}" && \
-	echo "GIT_URL=$${GIT_URL}" && \
-	git clone https://$${GIT_USER}:$${GIT_PASSWORD}@$${GIT_URL} ./build/$${GIT_REPO}
+	@if [ ! -f ./env/.git_credentials.env ]; then \
+		echo "Arquivo ./env/.git_credentials.env não encontrado."; \
+		exit 1; \
+	fi; \
+	set -a && . ./env/.git_credentials.env; \
+	echo "GIT_USER=$${GIT_USER}"; \
+	echo "GIT_URL=$${GIT_URL}"; \
+	git submodule add -b main https://$${GIT_USER}:$${GIT_PASS}@$${GIT_URL} submodules/toolchain
 
 submodule-update: 
 	@echo "Updating submodules..."
