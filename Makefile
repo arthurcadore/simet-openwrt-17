@@ -1,6 +1,66 @@
-.PHONY: all stop start build clean toolchain submodule install-submodule
+.PHONY: all stop start build clean toolchain submodule install-submodule env-init
 
 all: start
+
+GIT_BRANCH = lede-17.01
+GIT_REPO_URL = https://github.com/simetnicbr/openwrt-openwrt.git
+
+check-prerequisites:
+	@if [ ! -f ./env/.git_credentials.env ]; then \
+		echo "Arquivo ./env/.git_credentials.env não encontrado."; \
+		exit 1; \
+	fi; \
+	if ! command -v docker &> /dev/null; then \
+		echo "Docker não está instalado. Por favor, instale o Docker."; \
+		exit 1; \
+	fi; \
+	if ! command -v git &> /dev/null; then \
+		echo "Git não está instalado. Por favor, instale o Git."; \
+		exit 1; \
+	fi;
+	if ! command -v python3 &> /dev/null; then \
+		echo "Python3 não está instalado. Por favor, instale o Python3."; \
+		exit 1; \
+	fi; \
+
+env-init:
+	@bash -c '\
+		mkdir -p env; \
+		echo "Digite o usuário do Git (GIT_USER):"; \
+		read GIT_USER; \
+		echo "Digite a senha do Git (GIT_PASS):"; \
+		read -s GIT_PASS; echo ""; \
+		echo "Digite a URL do repositório Git (ex: https://git.intelbras.com.br/user/repo.git):"; \
+		read FULL_URL; \
+		GIT_URL=$$(echo $$FULL_URL | sed "s~https\?://~~"); \
+		URLESCAPED_PASS=$$(python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))" "$$GIT_PASS"); \
+		ENCODED_PASS=$$(echo "$$URLESCAPED_PASS" | base64); \
+		echo "FORCE_UNSAFE_CONFIGURE=1" > env/.git_credentials.env; \
+		echo "GIT_USER=$$GIT_USER" >> env/.git_credentials.env; \
+		echo "GIT_PASS=$$ENCODED_PASS" >> env/.git_credentials.env; \
+		echo "GIT_URL=$$GIT_URL" >> env/.git_credentials.env; \
+		echo "Arquivo env/.git_credentials.env criado com sucesso!"; \
+	'
+
+submodule-install: 
+	@echo "Installing submodules..."
+	@mkdir -p submodules
+	@git submodule add -f -b $(GIT_BRANCH) $(GIT_REPO_URL) submodules/openwrt
+
+toolchain-install:
+	@if [ ! -f ./env/.git_credentials.env ]; then \
+		echo "Arquivo ./env/.git_credentials.env não encontrado."; \
+		exit 1; \
+	fi; \
+	set -a && . ./env/.git_credentials.env; \
+	GIT_PASS_DECODED=$$(echo $$GIT_PASS | base64 -d); \
+	echo "GIT_USER=$${GIT_USER}"; \
+	echo "GIT_URL=$${GIT_URL}"; \
+	git clone -b main https://$${GIT_USER}:$${GIT_PASS_DECODED}@$${GIT_URL} submodules/toolchain
+
+submodule-update: 
+	@echo "Updating submodules..."
+	@git submodule update --remote --merge
 
 build: toolchain
 	@echo "Building..."
@@ -19,22 +79,3 @@ clean: stop
 	docker ps -a -q | xargs -r docker rm
 	docker images -q | xargs -r docker rmi -f
 	docker volume ls -q | xargs -r docker volume rm
-
-toolchain-install:
-	@if [ ! -f ./env/.git_credentials.env ]; then \
-		echo "Arquivo ./env/.git_credentials.env não encontrado."; \
-		exit 1; \
-	fi; \
-	set -a && . ./env/.git_credentials.env; \
-	echo "GIT_USER=$${GIT_USER}"; \
-	echo "GIT_URL=$${GIT_URL}"; \
-	git submodule add -b main https://$${GIT_USER}:$${GIT_PASS}@$${GIT_URL} submodules/toolchain
-
-submodule-update: 
-	@echo "Updating submodules..."
-	@git submodule update --remote --merge
-
-submodule-install: 
-	@echo "Installing submodules..."
-	@mkdir -p submodules
-	@git submodule add -b lede-17.01 https://github.com/simetnicbr/openwrt-openwrt.git submodules/openwrt
