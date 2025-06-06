@@ -80,6 +80,8 @@ stop:
 
 restart: stop start
 
+restart-hard: stop clean submodule-install start
+
 clean: stop submodule-clean
 	docker ps -a -q | xargs -r docker stop
 	docker ps -a -q | xargs -r docker rm

@@ -18,6 +18,7 @@ services:
         - ../submodules/openwrt:/host/
         - ../config/.config:/host/.config
         - ../config/feeds.conf:/host/feeds.conf
+        - ../out/:/host/output/
     container_name: openwrtcompiler
     working_dir: /host/
     entrypoint: ["/bin/sh", "/startup.sh"]

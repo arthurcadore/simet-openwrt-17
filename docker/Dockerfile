@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:18.04
 
 RUN apt-get update && apt-get install -y --force-yes --no-install-recommends \
 build-essential clang flex bison g++ gawk \

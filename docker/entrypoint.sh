@@ -58,9 +58,9 @@ make package/system/rpcd/compile V=s
 make package/feeds/packages/qrencode/compile V=s
 make package/utils/util-linux/compile V=s
 
-# echo "###############################################"
-# echo "## Build finished                            ##"
-# echo "###############################################"
+echo "###############################################"
+echo "## Build finished                            ##"
+echo "###############################################"
 
 # echo "###############################################"
 # echo "## Adding Include Files                      ##"
@@ -82,13 +82,13 @@ make package/utils/util-linux/compile V=s
 #     cp $FLOCK_DIR/flock $FLOCK_DIR/util-linux-flock 
 # fi
 
-# echo "###############################################"
-# echo "## Compressing Output File...                ##"
-# echo "###############################################"
+echo "###############################################"
+echo "## Compressing Output File...                ##"
+echo "###############################################"
 
-# OUTPUT_DIR=/host/output
+OUTPUT_DIR=/host/output
 
-# mkdir -p $OUTPUT_DIR
-# tar -czvf $OUTPUT_DIR/root-mediatek.tar.gz -C $ROOT_DIR .
+mkdir -p $OUTPUT_DIR
+tar -czvf $OUTPUT_DIR/root-mediatek.tar.gz -C $ROOT_DIR .
 
 tail -f /dev/null
