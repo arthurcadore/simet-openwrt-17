@@ -27,7 +27,7 @@ echo "###############################################"
 echo "## Adding Custom Files                      ##"
 echo "###############################################"
 
-cp -r /custom/* /host/
+cp -r /custom/openwrt-17/* /host/
 
 echo "###############################################"
 echo "## Building the Archives                     ##"
@@ -55,11 +55,11 @@ echo "###############################################"
 echo "## Build finished                            ##"
 echo "###############################################"
 
-# echo "###############################################"
-# echo "## Adding Include Files                      ##"
-# echo "###############################################"
+echo "###############################################"
+echo "## Adding Include Files                      ##"
+echo "###############################################"
 
-# cp -r /host/includes/* $ROOT_DIR/
+cp -r /includes/includes-17/* $ROOT_DIR/
 
 # if [ -f $FLOCK_DIR/util-linux-flock ]; then
 #     echo "###############################################"
@@ -81,5 +81,3 @@ echo "###############################################"
 
 mkdir -p $OUTPUT_DIR
 tar -czvf $OUTPUT_DIR/root-mediatek.tar.gz -C $ROOT_DIR .
-
-tail -f /dev/null
