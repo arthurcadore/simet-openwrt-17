@@ -59,7 +59,7 @@ echo "###############################################"
 echo "## Adding Include Files                      ##"
 echo "###############################################"
 
-cp -r /includes/includes-17/* $ROOT_DIR/
+cp -r /custom/includes-17/* $ROOT_DIR/
 
 # if [ -f $FLOCK_DIR/util-linux-flock ]; then
 #     echo "###############################################"

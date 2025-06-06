@@ -20,7 +20,7 @@ services:
         - ../config/.config:/host/.config
         - ../config/feeds.conf:/host/feeds.conf
         - ../out/:/host/output/
-        - ../custom/openwrt-17/:/custom/
+        - ../custom/:/custom/
     container_name: openwrtcompiler
     working_dir: /host/
     entrypoint: ["/bin/sh", "/startup.sh"]
