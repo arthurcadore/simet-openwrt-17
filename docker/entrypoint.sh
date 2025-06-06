@@ -1,26 +1,19 @@
 #!/bin/sh
 set -e
 
-ROOT_DIR=/host/staging_dir/target-aarch64-openwrt-linux-musl_musl/root-mediatek
-FLOCK_DIR=$ROOT_DIR/usr/bin
-
 echo "###############################################"
 echo "## Configuring Git                           ##"
 echo "###############################################"
 
-# Decodifica a senha em base64
-DECODED_PASSWORD=$(echo "$GIT_PASS" | base64 -d)
-
-# Configurações do Git
 git config --global --add safe.directory /host
 git config --global credential.helper store
+
+DECODED_PASSWORD=$(echo "$GIT_PASS" | base64 -d)
 echo "https://${GIT_USER}:${DECODED_PASSWORD}@git.intelbras.com.br" > ~/.git-credentials
 
 echo "###############################################"
 echo "## Updating feeds                            ##"
 echo "###############################################"
-
-# verifica se a pasta feeds existe, se não existir atualiza os feeds
 
 if [ ! -d "/host/feeds" ]; then
     echo "Feeds directory not found, updating feeds..."
@@ -30,11 +23,11 @@ else
     echo "Feeds directory already exists, skipping update."
 fi
 
-# echo "###############################################"
-# echo "## Adding Custom Files                      ##"
-# echo "###############################################"
+echo "###############################################"
+echo "## Adding Custom Files                      ##"
+echo "###############################################"
 
-# cp -r /host/custom/* /host/
+cp -r /custom/* /host/
 
 echo "###############################################"
 echo "## Building the Archives                     ##"
@@ -85,8 +78,6 @@ echo "###############################################"
 echo "###############################################"
 echo "## Compressing Output File...                ##"
 echo "###############################################"
-
-OUTPUT_DIR=/host/output
 
 mkdir -p $OUTPUT_DIR
 tar -czvf $OUTPUT_DIR/root-mediatek.tar.gz -C $ROOT_DIR .

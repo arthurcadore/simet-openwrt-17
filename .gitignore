@@ -5,7 +5,7 @@
 /feed-toolchain-3006
 /env
 /submodules/*
-/output
+/out/
 /bin
 /build_dir
 /staging_dir
