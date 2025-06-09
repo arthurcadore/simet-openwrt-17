@@ -72,13 +72,17 @@ build:
 
 start: build
 	@echo "Starting..."
-	@docker compose -f docker/docker-compose.yaml up
+	@docker compose -f docker/docker-compose.yaml up openwrtcompiler
 
 stop:
 	@echo "Stopping..."
 	@docker compose -f docker/docker-compose.yaml down
 
 restart: stop start
+
+start-server: 
+	@echo "Starting server..."
+	@docker compose -f docker/docker-compose.yaml up httpserver
 
 restart-hard: stop clean submodule-install start
 

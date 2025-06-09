@@ -81,3 +81,5 @@ echo "###############################################"
 
 mkdir -p $OUTPUT_DIR
 tar -czvf $OUTPUT_DIR/root-mediatek.tar.gz -C $ROOT_DIR .
+
+tail -f /dev/null 

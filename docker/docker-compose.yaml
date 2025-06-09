@@ -39,4 +39,4 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - "./out/:/usr/local/apache2/htdocs/"
+      - "../out/:/usr/local/apache2/htdocs/"
