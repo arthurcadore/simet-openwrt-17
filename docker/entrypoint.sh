@@ -9,7 +9,7 @@ git config --global --add safe.directory /host
 git config --global credential.helper store
 
 DECODED_PASSWORD=$(echo "$GIT_PASS" | base64 -d)
-echo "https://${GIT_USER}:${DECODED_PASSWORD}@git.intelbras.com.br" > ~/.git-credentials
+echo "https://${GIT_USER}:${DECODED_PASSWORD}@<URL_REPO>" > ~/.git-credentials
 
 echo "###############################################"
 echo "## Updating feeds                            ##"

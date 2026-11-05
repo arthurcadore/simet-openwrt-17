@@ -30,7 +30,7 @@ env-init:
 		read GIT_USER; \
 		echo "Digite a senha do Git (GIT_PASS):"; \
 		read -s GIT_PASS; echo ""; \
-		echo "Digite a URL do repositório Git (ex: https://git.intelbras.com.br/user/repo.git):"; \
+		echo "Digite a URL do repositório Git (ex: https://<URL_REPO>/user/repo.git):"; \
 		read FULL_URL; \
 		GIT_URL=$$(echo $$FULL_URL | sed "s~https\?://~~"); \
 		URLESCAPED_PASS=$$(python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))" "$$GIT_PASS"); \
